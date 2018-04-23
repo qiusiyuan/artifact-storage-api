@@ -1,0 +1,127 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Artifact API
+host: localhost:10010
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /v1/listPath:
+    x-swagger-router-controller: artifact-storage
+    get:
+      description: >-
+       Get an array of files and folders
+      operationId: listPath
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: fullPath
+          in: header
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/listPathResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /v1/download/:
+    x-swagger-router-controller: artifact-storage
+    get:
+      description: >-
+       download the files
+      operationId: downloadFile
+      consumes:
+        - application/json
+      produces:
+        - application/octet-stream
+        - application/javascript
+      parameters:
+        - name: fullPath
+          in: header
+          type: string
+          required: false
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: file
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /v1/scpTo:
+    x-swagger-router-controller: artifact-storage
+    post:
+      description: >-
+       do scp to
+      operationId: scpTo
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/scpToBody'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  scpToBody:
+    type: object
+    required:
+      - fromPath
+      - toPath
+      - clusterIp
+      - user
+      - password
+    properties:
+      fromPath:
+        type: string
+      toPath:
+        type: string
+      clusterIp:
+        type: string
+      user:
+        type: string
+      password:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      success:
+        type: boolean
+      message:
+        type: string
+  listPathResponse:
+    required:
+      - success
+    properties:
+      success:
+        type: boolean
+      files:
+        type: array
+        items:
+          type: object
+  
