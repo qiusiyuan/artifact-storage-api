@@ -35,7 +35,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /v1/download/:
+  /v1/download/{fullPath}*:
     x-swagger-router-controller: artifact-storage
     get:
       description: >-
@@ -48,9 +48,9 @@ paths:
         - application/javascript
       parameters:
         - name: fullPath
-          in: header
+          in: path
           type: string
-          required: false
+          required: true
       responses:
         "200":
           description: Success

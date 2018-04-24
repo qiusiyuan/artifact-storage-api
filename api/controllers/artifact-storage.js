@@ -7,6 +7,7 @@ const list = require('../lib/listPath');
 const download = require('../lib/downloadFile');
 const logger = require('log4js').getLogger();
 const scp = require('../lib/scp');
+const path = require('path');
 
 module.exports = {
   listPath: listPath,
@@ -47,7 +48,7 @@ function listPath(req, res){
 
 function downloadFile(req, res){
   const options = {
-    filePath :req.swagger.params.fullPath.value || null,
+    filePath :path.join('/',req.swagger.params.fullPath.value )|| null,
   }
   download.downloadFile(options, function(err, filePath){
     if (err){
